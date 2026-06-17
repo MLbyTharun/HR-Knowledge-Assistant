@@ -19,7 +19,15 @@ from ai import z
 
 
 load_dotenv()
-
+with st.sidebar:
+    st.header("⚙️ Groq Settings")
+    api_key = st.text_input(
+        "Groq API Key", 
+        type="password", 
+        value="", # can be setted in .env file or can be directly setted in web
+        help="Get a free key at console.groq.com"
+    )
+    
 # CLIENT
 @st.cache_resource
 def get_client():
