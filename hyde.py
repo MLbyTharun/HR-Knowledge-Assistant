@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 from groq import Groq
 import streamlit as st
 load_dotenv()
-@st.cache_resource
 
+@st.cache_resource
 def get_client():
     return Groq(api_key=os.getenv("GROQ_API_KEY"))
 
