@@ -11,8 +11,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document  
 from groq import Groq
 from dotenv import load_dotenv
-#
-from function import load_embeddings
+
+from embedding import load_embeddings
 from hyde import hyde_query_expansion  
 from extract_text_from_pdfs import extract_text_from_pdfs  
 from ai import z
@@ -133,7 +133,7 @@ if uploaded_files:
     db = st.session_state.db
 
     # GENERATE ANSWER
-    # ✅ FIXED: Now properly gated on `submitted` — won't re-run on every Streamlit rerender
+    # FIXED: Now properly gated on `submitted` — won't re-run on every Streamlit rerender
     if submitted and query and "db" in st.session_state:
         with st.spinner("📖 Searching policies..."):
 
