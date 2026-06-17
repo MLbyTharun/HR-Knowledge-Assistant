@@ -4,6 +4,7 @@ import sys
 from langchain_huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 load_dotenv()
+
 @st.cache_resource
 def load_embeddings():
 

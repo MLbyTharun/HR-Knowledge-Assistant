@@ -5,17 +5,14 @@ from groq import Groq
 import streamlit as st
 load_dotenv()
 
-@st.cache_resource
-def get_client():
-    return Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-client = get_client()
 
 # HYDE QUERY EXPANSION : this function generates a hypothetical policy excerpt based on the user's query to improve retrieval alignment.
 #  It uses the same LLM to create a concise, relevant policy snippet that can be embedded and indexed alongside actual documents,
 #   helping to surface more relevant context during retrieval.
 
-def hyde_query_expansion(query: str) -> str:
+def hyde_query_expansion(query: str,api_key) -> str:
+    client = Groq(api_key=api_key)
     """Generate a hypothetical policy excerpt to improve retrieval alignment."""
     try:
         expansion_prompt = (

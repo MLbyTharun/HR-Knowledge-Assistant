@@ -10,31 +10,22 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document  
 from groq import Groq
-from dotenv import load_dotenv
 
-from embedding import load_embeddings
-from hyde import hyde_query_expansion  
-from extract_text_from_pdfs import extract_text_from_pdfs  
-from ai import z
+from embedding.embedding import load_embeddings
+from models.hyde import hyde_query_expansion  
+from text_extract.extract_text_from_pdfs import extract_text_from_pdfs  
+from models.ai import generate_output
 
-
-load_dotenv()
+# Groq API input
 with st.sidebar:
     st.header("⚙️ Groq Settings")
     api_key = st.text_input(
         "Groq API Key", 
         type="password", 
-        value="", # can be setted in .env file or can be directly setted in web
+        value="",
         help="Get a free key at console.groq.com"
     )
     
-# CLIENT
-@st.cache_resource
-def get_client():
-    return Groq(api_key=os.getenv("GROQ_API_KEY"))
-
-client = get_client()
-
 
 st.set_page_config(page_title="HR Policy Assistant", page_icon="🧑‍💼", layout="wide")
 
@@ -90,7 +81,17 @@ with left_col:
 
 with right_col:
     st.subheader("❓ Ask Your Policy Question")
+    import streamlit as st
 
+    st.markdown("""
+    <style>
+    div[data-testid="stAlert"] p {
+        color: black !important;   /* Change to any color */
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.info("Make sure to set your Groq API key in the sidebar before generating messages.", icon="💡")
     with st.form("query_form"):
         query = st.text_input(
             "e.g., 'maternity leave policy' or 'grievance procedure'",
@@ -142,14 +143,14 @@ if uploaded_files:
 
     # GENERATE ANSWER
     # FIXED: Now properly gated on `submitted` — won't re-run on every Streamlit rerender
-    if submitted and query and "db" in st.session_state:
+    if submitted and query and "db" in st.session_state and api_key:
         with st.spinner("📖 Searching policies..."):
 
             
             search_query = query
             if use_hyde:
                 with st.spinner("🧠 Expanding query with HyDE..."):
-                    hypothetical_doc = hyde_query_expansion(query)
+                    hypothetical_doc = hyde_query_expansion(query,api_key)
                     search_query = hypothetical_doc
 
             docs_with_scores = db.similarity_search_with_score(search_query, k=10)
@@ -196,7 +197,7 @@ if uploaded_files:
 
             context = "\n\n---\n\n".join(context_parts)
             
-            response = z(context,query)
+            response = generate_output(context,query,api_key)
 
             answer = response.choices[0].message.content
 
@@ -217,7 +218,8 @@ if uploaded_files:
                 st.markdown(f"**Chunk {i+1}** — `{source}`")
                 st.text(doc.page_content[:400] + ("..." if len(doc.page_content) > 400 else ""))
                 st.markdown("---")
-
+    elif not api_key:
+        st.warning("⚠️ Please add Groq api key in sidebar")
     elif submitted and not query:
         st.warning("❓ Please enter your HR question first!")
 

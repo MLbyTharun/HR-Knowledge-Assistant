@@ -1,0 +1,12 @@
+pypdf
+langchain
+langchain-community
+langchain-huggingface
+langchain-groq
+langchain-text-splitters
+faiss-cpu
+groq
+datasets
+sentence-transformers
+pandas
+torchvision
