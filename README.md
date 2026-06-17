@@ -10,7 +10,7 @@
 [![HuggingFace](https://img.shields.io/badge/HuggingFace-Embeddings-FFD21E?style=flat&logo=huggingface&logoColor=black)](https://huggingface.co)
 
 ---
-TRY IT HERE : [ STREAMLIT](https://hr-knowledge-assistant.streamlit.app/)
+🔗 TRY IT HERE 👉 [ STREAMLIT](https://hr-knowledge-assistant.streamlit.app/)
 
 ## 🚀 What It Does
 
