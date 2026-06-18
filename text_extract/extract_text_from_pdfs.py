@@ -1,7 +1,7 @@
 from pypdf import PdfReader
 import streamlit as st
 
-
+# extracts raw text from PDFs safely without crashing with large files
 def extract_text_from_pdfs(files, max_chars_per_pdf=25000):
     texts = []
     for file in files:
