@@ -81,7 +81,6 @@ with left_col:
 
 with right_col:
     st.subheader("❓ Ask Your Policy Question")
-    import streamlit as st
 
     st.markdown("""
     <style>
