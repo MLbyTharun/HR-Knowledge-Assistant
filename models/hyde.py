@@ -1,10 +1,6 @@
 import os
-import sys
-from dotenv import load_dotenv
 from groq import Groq
 import streamlit as st
-load_dotenv()
-
 
 
 # HYDE QUERY EXPANSION : this function generates a hypothetical policy excerpt based on the user's query to improve retrieval alignment.
