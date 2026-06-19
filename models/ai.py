@@ -1,6 +1,6 @@
 from groq import Groq
 import os
-from dotenv import load_dotenv
+
 
 
 def generate_output(context,query,api_key):
