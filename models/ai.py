@@ -1,11 +1,11 @@
-from groq import Groq
-import os
-
-
-
-def generate_output(context,query,api_key):
-   client =Groq(api_key=api_key)
-   responses=client.chat.completions.create(
+def generate_output(context, query, api_key):
+    if not api_key:
+        raise ValueError("Groq API key is missing. Add it in the sidebar.")
+    if not context or not context.strip():
+        raise ValueError("No policy context was retrieved. Upload documents first.")
+    from groq import Groq
+    client = Groq(api_key=api_key)
+    responses = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[
                 {
@@ -21,7 +21,7 @@ MISSION: Deliver INSIGHTFUL policy analysis with PERFECT formatting using ONLY t
 
 📋 REQUIRED FORMAT (use exactly):
 
-**KEY ANSWER**  
+**KEY ANSWER**
 [One precise sentence capturing policy essence]
 
 ---
@@ -53,6 +53,6 @@ Use the REQUIRED FORMAT exactly with insightful policy analysis."""
                 }
             ],
                     temperature=0.1,
-                    max_tokens=1400  # ✅ IMPROVED: Was 800 — too small for the required format
+                    max_tokens=1400  # IMPROVED: Was 800 — too small for the required format
             )
-   return responses
+    return responses
