@@ -1,3 +1,6 @@
+GROQ_MODEL = "qwen/qwen3.8-27b"  # Single source of truth — swap here if Groq rotates models again.
+
+
 def generate_output(context, query, api_key):
     if not api_key:
         raise ValueError("Groq API key is missing. Add it in the sidebar.")
@@ -6,7 +9,7 @@ def generate_output(context, query, api_key):
     from groq import Groq
     client = Groq(api_key=api_key)
     responses = client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
+                    model=GROQ_MODEL,
                     messages=[
                 {
                     "role": "system",
