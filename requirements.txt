@@ -1,3 +1,4 @@
+streamlit
 pypdf
 langchain
 langchain-community
@@ -6,7 +7,4 @@ langchain-groq
 langchain-text-splitters
 faiss-cpu
 groq
-datasets
 sentence-transformers
-pandas
-torchvision
