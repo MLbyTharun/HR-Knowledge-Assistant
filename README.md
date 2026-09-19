@@ -119,11 +119,7 @@ streamlit run main_app/app.py
 
 ### 4. Add your HR documents & build the vector index
 
-Place your HR policy PDFs in the designated input folder (see `text_extract/`), then run:
-
-```bash
-python embedding/embed.py
-```
+Place your HR policy PDFs in the designated input folder (see `text_extract/`). The vector index is built automatically in the app when you upload PDFs — no separate script needed.
 
 ### 5. Enter your Groq API key in the app
 
