@@ -1,16 +1,14 @@
-import os
-from groq import Groq
-import streamlit as st
-
-
 # HYDE QUERY EXPANSION : this function generates a hypothetical policy excerpt based on the user's query to improve retrieval alignment.
 #  It uses the same LLM to create a concise, relevant policy snippet that can be embedded and indexed alongside actual documents,
 #   helping to surface more relevant context during retrieval.
 
-def hyde_query_expansion(query: str,api_key) -> str:
-    client = Groq(api_key=api_key)
+def hyde_query_expansion(query: str, api_key) -> str:
     """Generate a hypothetical policy excerpt to improve retrieval alignment."""
+    if not api_key:
+        return query  # No key — skip expansion, use original query.
     try:
+        from groq import Groq
+        client = Groq(api_key=api_key)
         expansion_prompt = (
             f"Write a concise one-paragraph HR policy excerpt that would directly answer: '{query}'. "
             "Write it as if it's from an actual HR policy document."
