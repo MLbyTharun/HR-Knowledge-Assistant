@@ -1,6 +1,6 @@
 # 🤖 HR Knowledge Assistant
 
-> **A production-ready RAG pipeline that turns HR policy documents into an intelligent Q&A assistant — powered by LLaMA 3, Groq, LangChain, and FAISS.**
+> **A production-ready RAG pipeline that turns HR policy documents into an intelligent Q&A assistant — powered by Qwen3, Groq, LangChain, and FAISS.**
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![LangChain](https://img.shields.io/badge/LangChain-Framework-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://langchain.com)
@@ -16,7 +16,7 @@
 
 HR teams drown in policy PDFs and employee handbooks. This assistant lets anyone ask natural language questions and get **accurate, grounded answers** directly from internal HR documents — no hallucinations, no Googling, no waiting.
 
-Built on a **Retrieval-Augmented Generation (RAG)** architecture, it retrieves the most relevant document chunks and feeds them as context to **LLaMA 3 via Groq's blazing-fast LPU inference** before generating a response.
+Built on a **Retrieval-Augmented Generation (RAG)** architecture, it retrieves the most relevant document chunks and feeds them as context to **Qwen3 via Groq's blazing-fast LPU inference** before generating a response.
 
 ---
 
@@ -32,7 +32,7 @@ HR Documents (PDFs)
  [Text Chunking]               ← LangChain Text Splitters
         │
         ▼
- [Embedding Generation]        ← HuggingFace sentence-transformers
+ [Embedding Generation]        ← HuggingFace Inference API (cloud)
         │
         ▼
  [FAISS Vector Store]          ← Indexed & persisted locally
@@ -40,14 +40,14 @@ HR Documents (PDFs)
    User Query
         │
         ▼
- [HyDE Expansion] ─ToggleON/OFF─ LLaMA 3.3-70b generates a hypothetical
+ [HyDE Expansion] ─ToggleON/OFF─ Qwen3.8-27b generates a hypothetical
         │                          HR policy excerpt matching the query
         │                          (falls back to raw query if disabled/fails)
         ▼
  [Semantic Retrieval]          ← Top-k similarity search on hypothetical doc
         │
         ▼
- [LLM Generation]              ← LLaMA 3 via Groq API
+ [LLM Generation]              ← Qwen3 via Groq API
         │
         ▼
  [Streamlit UI]                ← Chat interface + API key input + HyDE toggle
@@ -57,11 +57,11 @@ HR Documents (PDFs)
 
 ## ✨ Key Features
 
-- **HyDE (Hypothetical Document Embeddings)** — Before retrieval, LLaMA 3.3-70b generates a fake HR policy excerpt that *would* answer the query. This hypothetical doc is embedded and used for retrieval instead of the raw query — bridging the semantic gap between short questions and long policy documents. Gracefully falls back to the original query on failure.
+- **HyDE (Hypothetical Document Embeddings)** — Before retrieval, Qwen3.8-27b generates a fake HR policy excerpt that *would* answer the query. This hypothetical doc is embedded and used for retrieval instead of the raw query — bridging the semantic gap between short questions and long policy documents. Gracefully falls back to the original query on failure.
 - **Toggleable HyDE** — HyDE can be switched on or off directly in the UI, so you can compare retrieval quality with and without it in real time
 - **In-app API Key Input** — Groq API key is entered inside the Streamlit app itself (no `.env` file needed), making it straightforward to deploy and share without exposing credentials
 - **RAG Pipeline** — Retrieves only the most relevant document chunks before generating answers, keeping responses grounded and accurate
-- **Groq LPU Inference** — Ultra-low latency responses using Groq's hardware-accelerated LLaMA 3
+- **Groq LPU Inference** — Ultra-low latency responses using Groq's hardware-accelerated Qwen3
 - **Local Vector Search** — FAISS index stored locally, no external vector DB dependency
 - **Modular Codebase** — Clean separation between text extraction, embedding, and the main app
 - **Streamlit Chat UI** — Conversational interface with session history
@@ -86,9 +86,9 @@ HR-Knowledge-Assistant/
 
 | Layer | Tool |
 |---|---|
-| LLM | LLaMA 3 (via Groq API) |
+| LLM | Qwen3 (via Groq API) |
 | Framework | LangChain |
-| Embeddings | HuggingFace `sentence-transformers` |
+| Embeddings | HuggingFace Inference API (cloud, no local GPU/CPU load) |
 | Vector Store | FAISS (CPU) |
 | PDF Parsing | pypdf |
 | UI | Streamlit |
@@ -121,11 +121,12 @@ streamlit run main_app/app.py
 
 Place your HR policy PDFs in the designated input folder (see `text_extract/`). The vector index is built automatically in the app when you upload PDFs — no separate script needed.
 
-### 5. Enter your Groq API key in the app
+### 5. Enter your API keys in the app
 
-No `.env` file needed — paste your Groq API key directly into the sidebar of the running app.
+No `.env` file needed — paste both keys directly into the sidebar of the running app:
 
-> Get a free API key at [console.groq.com](https://console.groq.com)
+- **Groq API key** — free at [console.groq.com](https://console.groq.com) (powers the LLM answers)
+- **HuggingFace token** — free at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) (powers cloud embeddings, so nothing heavy runs on your machine)
 
 ### 6. Toggle HyDE on or off
 
@@ -143,7 +144,7 @@ With HyDE enabled, the pipeline does this instead:
 User Query: "What is the leave policy for new employees?"
         │
         ▼
-LLaMA 3.3-70b generates a hypothetical policy excerpt:
+Qwen3.8-27b generates a hypothetical policy excerpt:
   "New employees are entitled to 12 days of paid leave per calendar year,
    accruing at 1 day per month. Leave may not be carried forward beyond..."
         │
