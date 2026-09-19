@@ -8,13 +8,14 @@ def hyde_query_expansion(query: str, api_key) -> str:
         return query  # No key — skip expansion, use original query.
     try:
         from groq import Groq
+        from models.ai import GROQ_MODEL
         client = Groq(api_key=api_key)
         expansion_prompt = (
             f"Write a concise one-paragraph HR policy excerpt that would directly answer: '{query}'. "
             "Write it as if it's from an actual HR policy document."
         )
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=GROQ_MODEL,
             messages=[{"role": "user", "content": expansion_prompt}],
             max_tokens=150,
             temperature=0.1
