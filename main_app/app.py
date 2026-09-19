@@ -15,14 +15,20 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 
-# Groq API input
+# API keys input (all heavy compute runs in the cloud — nothing runs on your GPU/CPU)
 with st.sidebar:
-    st.header("⚙️ Groq Settings")
+    st.header("⚙️ API Settings")
     api_key = st.text_input(
-        "Groq API Key", 
-        type="password", 
+        "Groq API Key",
+        type="password",
         value="",
         help="Get a free key at console.groq.com"
+    )
+    hf_token = st.text_input(
+        "HuggingFace Token",
+        type="password",
+        value="",
+        help="Free at huggingface.co/settings/tokens — used for cloud embeddings, so nothing runs locally"
     )
 
 
@@ -139,7 +145,7 @@ if uploaded_files:
                     else:
                         st.caption(f"📊 Indexed {len(all_docs)} chunks from {len(raw_texts)} document(s)")
 
-                        embeddings = load_embeddings()
+                        embeddings = load_embeddings(hf_token)
                         st.session_state.db = FAISS.from_documents(all_docs, embeddings)
                         st.session_state.file_ids = file_ids
 
